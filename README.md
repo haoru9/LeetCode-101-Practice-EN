@@ -8,8 +8,8 @@ Study notes and Python solutions following **“LeetCode 101 — A Grinding Guid
 ## Scope & Structures
 This repository mirrors the chapter order of **LeetCode 101 (2nd ed.)** and, for each chapter, includes three parts:
 1) **Knowledge Summary**  
-2) **Book Exercises** — problems listed at the end of the book’s chapter  
-3) **Extra Exercises** — additional problems of the same pattern for reinforcement
+2) **Typical Examples** — problems listed at the book’s sub-sections  
+3) **Exercises** — problems listed at the end of the book’s chapter  
 
 ## Chapter Order
 01. **Greedy**  
