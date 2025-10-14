@@ -76,14 +76,15 @@ Hence the output is `2`.
 **Python Code:**  
 
 ```python
-def findContentChildren(g: list[int], s: list[int]) -> int:
-    g.sort()
-    s.sort()
-    child_i = cookie_i = 0
-    n_children, n_cookies = len(g), len(s)
+class Solution:
+    def findContentChildren(self, g: List[int], s: List[int]) -> int:
+        g.sort()
+        s.sort()
+        i = j = 0                    # i child，j cookie
+        n, m = len(g), len(s)
 
-    while child_i < n_children and cookie_i < n_cookies:
-        if g[child_i] <= s[cookie_i]:
-            child_i += 1
-        cookie_i += 1
-    return child_i
+        while i < n and j < m:
+            if s[j] >= g[i]:         # 这块饼干能满足该孩子
+                i += 1               # 满足一个孩子
+            j += 1                   # 使用了这块饼干（无论是否满足都要移动）
+        return i
