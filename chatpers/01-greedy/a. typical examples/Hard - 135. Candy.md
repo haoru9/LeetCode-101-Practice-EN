@@ -129,10 +129,7 @@ class Solution:
   - 若下降段未超过峰顶长度，减去重复的那一颗；  
   - 若下降段更长，则相当于把峰顶再“抬高”一格。
 
-这样，每个“山形”的最少糖果总数满足：
-\[
-\text{sum}(1..up) + \text{sum}(1..down) + \max(up, down) + 1
-\]
+这样，每个“山形”的最少糖果总数满足： sum(1..up)+sum(1..down)+max(up,down)+1
 
 ---
 
@@ -174,3 +171,4 @@ class Solution:
 
         return candies
 ```
+
