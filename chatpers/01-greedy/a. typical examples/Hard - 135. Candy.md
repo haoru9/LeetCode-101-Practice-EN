@@ -150,37 +150,32 @@ class Solution:
         if n <= 1:
             return n
 
-        # ans: total number of candies
-        # up:  current increasing slope length
-        # down: current decreasing slope length
-        # peak: the length of the last increasing slope (peak height)
-        ans = 1
+        # 初始值：第一个孩子至少 1 颗糖
+        min_number_of_candies = 1
         up = down = peak = 0
 
         for i in range(1, n):
             if ratings[i] > ratings[i - 1]:
-                # Increasing slope: extend up, reset down, update peak
+                # 上升趋势：右边孩子比左边评分高
                 up += 1
-                peak = up
-                down = 0
-                ans += 1 + up
+                peak = up             # 记录上升长度（山峰高度）
+                down = 0              # 重置下降段
+                min_number_of_candies += 1 + up   # 当前孩子糖果 = 上升长度 + 1
 
             elif ratings[i] == ratings[i - 1]:
-                # Plateau: reset all counters, each child gets 1 candy
+                # 持平：重置所有计数
                 up = down = peak = 0
-                ans += 1
+                min_number_of_candies += 1        # 每人至少 1 颗糖
 
             else:
-                # Decreasing slope: extend down, reset up
+                # 下降趋势：右边孩子评分更低
                 up = 0
                 down += 1
-
-                # If downhill length <= previous uphill length,
-                # subtract 1 to avoid double-counting the peak
-                # Otherwise, keep (raise the peak implicitly)
+                # 若下降没超过上升峰值，说明峰顶已够高，需要减去重复的那 1
                 if peak >= down:
-                    ans += down          # equivalent to (1 + down - 1)
+                    min_number_of_candies += down
                 else:
-                    ans += down + 1      # no subtraction → peak is raised
+                    # 下降更长时，峰顶必须再高 1 才压得住右边
+                    min_number_of_candies += down + 1
 
-        return ans
+        return min_number_of_candies
