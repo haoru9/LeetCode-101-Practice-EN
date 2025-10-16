@@ -110,29 +110,26 @@ class Solution:
 
         # The sum of all candies is the minimal valid total.
         return sum(candies)
-
+```
 
 ## Solution 2 — One-pass, O(1) Extra Space (Mountain Counting)
 
 **Idea.**  
-We can view the entire ratings sequence as a series of *mountains*:  
-each mountain has an increasing slope followed by a decreasing slope.  
-By tracking three variables —  
-- `up`: length of the current increasing slope,  
-- `down`: length of the current decreasing slope,  
-- `peak`: the length of the last increasing slope (height of the mountain’s peak) —  
-we can compute the total candies in a **single pass**, using only `O(1)` extra space.
+我们可以把评分序列看作若干个「山形」结构：先上升再下降。  
+通过跟踪三个变量：  
+- `up`：当前上升坡的长度；  
+- `down`：当前下降坡的长度；  
+- `peak`：上一个山峰的上升长度（峰顶高度）；  
+我们可以在**一次遍历**中计算最少糖果数量，只使用 `O(1)` 额外空间。
 
-For every child:
-- When ratings **rise**, we increment `up` and add `1 + up` candies.  
-- When ratings are **equal**, we reset all counters and add `1`.  
-- When ratings **fall**, we increment `down` and add `1 + down` candies,  
-  but if the current `down` length does **not exceed** `peak`,  
-  we subtract `1` to avoid double-counting the peak’s candy.  
-  If the downhill run is **longer than** the uphill, we keep the extra candy,  
-  effectively “raising” the peak by one.
+每个孩子的处理逻辑如下：
+- 当评分**上升**时：`up += 1`，加 `1 + up` 颗糖；  
+- 当评分**持平**时：重置所有计数，加 `1`；  
+- 当评分**下降**时：`down += 1`，加 `1 + down` 颗糖。  
+  - 若下降段未超过峰顶长度，减去重复的那一颗；  
+  - 若下降段更长，则相当于把峰顶再“抬高”一格。
 
-This ensures every “mountain” contributes the minimal number of candies:
+这样，每个“山形”的最少糖果总数满足：
 \[
 \text{sum}(1..up) + \text{sum}(1..down) + \max(up, down) + 1
 \]
@@ -150,32 +147,30 @@ class Solution:
         if n <= 1:
             return n
 
-        # 初始值：第一个孩子至少 1 颗糖
-        min_number_of_candies = 1
+        # Initial candy count
+        candies = 1
         up = down = peak = 0
 
         for i in range(1, n):
             if ratings[i] > ratings[i - 1]:
-                # 上升趋势：右边孩子比左边评分高
+                # rising slope
                 up += 1
-                peak = up             # 记录上升长度（山峰高度）
-                down = 0              # 重置下降段
-                min_number_of_candies += 1 + up   # 当前孩子糖果 = 上升长度 + 1
-
+                peak = up
+                down = 0
+                candies += 1 + up
             elif ratings[i] == ratings[i - 1]:
-                # 持平：重置所有计数
+                # flat slope
                 up = down = peak = 0
-                min_number_of_candies += 1        # 每人至少 1 颗糖
-
+                candies += 1
             else:
-                # 下降趋势：右边孩子评分更低
+                # falling slope
                 up = 0
                 down += 1
-                # 若下降没超过上升峰值，说明峰顶已够高，需要减去重复的那 1
+                # avoid double counting the peak
                 if peak >= down:
-                    min_number_of_candies += down
+                    candies += down
                 else:
-                    # 下降更长时，峰顶必须再高 1 才压得住右边
-                    min_number_of_candies += down + 1
+                    candies += down + 1
 
-        return min_number_of_candies
+        return candies
+```
